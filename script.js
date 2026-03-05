@@ -1,8 +1,8 @@
-// script.js
 function animar() {
     const llanta = document.getElementById('llanta');
     const camino = document.getElementById('camino-pintado');
-    const contador = document.getElementById('contador');
+    const distText = document.getElementById('distancia-recorrida');
+    const contadorPi = document.getElementById('contador');
     const refs = [
         document.getElementById('ref-1'),
         document.getElementById('ref-2'),
@@ -10,80 +10,51 @@ function animar() {
         document.getElementById('ref-4')
     ];
 
-    // --- CONFIGURACIÓN DE TAMAÑO ---
-    const diametro = 150; // El nuevo tamaño en píxeles (CSS)
-    const perimetro = diametro * Math.PI;
-    const duracionTotal = 4000; // 4 segundos para todo el recorrido
+    // --- CONFIGURACIÓN TÉCNICA ---
+    const diametroRealMm = 700;
+    const perimetroRealMm = diametroRealMm * Math.PI;
+    const diametroVisualPx = 150; // El tamaño en tu pantalla
+    const perimetroVisualPx = diametroVisualPx * Math.PI;
+    const duracion = 5000; // 5 segundos para que se aprecie el medidor
 
-    // --- REINICIO INSTANTÁNEO ---
-    llanta.style.transition = "none";
-    camino.style.transition = "none";
-    llanta.style.left = "0px";
-    llanta.style.transform = "rotate(0deg)";
-    camino.style.width = "0px";
-    camino.innerHTML = "";
-    contador.innerText = "0.00";
+    // --- REINICIO ---
+    // (Mantén aquí tu código de reinicio de estilos que ya tenías)
 
-    refs.forEach(r => {
-        r.style.transition = "none";
-        r.style.width = "0px";
-    });
-
-    // --- PASO 2: INICIAR ANIMACIÓN SINCRONIZADA ---
     setTimeout(() => {
-        // 1. Animamos la base (Llanta y rastro)
-        llanta.style.transition = `all ${duracionTotal}ms linear`;
-        camino.style.transition = `width ${duracionTotal}ms linear`;
+        // Movimiento visual
+        llanta.style.transition = `all ${duracion}ms linear`;
+        camino.style.transition = `width ${duracion}ms linear`;
 
-        // Mover la llanta y crecer el rastro
-        llanta.style.left = perimetro + "px";
-        camino.style.width = perimetro + "px";
+        llanta.style.left = perimetroVisualPx + "px";
+        llanta.style.transform = "rotate(360deg)"; // 1 vuelta exacta
+        camino.style.width = perimetroVisualPx + "px";
 
-        // --- CÁLCULO DE ROTACIÓN SINCRONIZADA ---
-        // Para que sea perfecto, la llanta debe rotar exactamente
-        // 360 grados por cada vuelta completa (perímetro).
-        // En este caso, dará 1 vuelta completa para llegar a PI.
-        const rotacionTotalGrados = 360;
-        llanta.style.transform = `rotate(${rotacionTotalGrados}deg)`;
-
-        // 2. Animación de Relevos de las barras superiores (proporcionales)
-        const tiempoPorDiametro = duracionTotal / Math.PI;
+        // Barras superiores sincronizadas
+        const tiempoPorDiametro = duracion / Math.PI;
         refs.forEach((ref, i) => {
             const retraso = i * tiempoPorDiametro;
-            const proporcionAncho = (i < 3) ? 1 : 0.14159;
-            const duracionBarra = tiempoPorDiametro * proporcionAncho;
-
-            ref.style.transition = `width ${duracionBarra}ms linear`;
+            const proporcion = (i < 3) ? 1 : 0.14159;
+            ref.style.transition = `width ${tiempoPorDiametro * proporcion}ms linear`;
             ref.style.transitionDelay = `${retraso}ms`;
-
-            let anchoFinal = (i < 3) ? diametro : (diametro * 0.14159);
-            ref.style.width = anchoFinal + "px";
+            ref.style.width = (i < 3 ? diametroVisualPx : diametroVisualPx * 0.14159) + "px";
         });
 
-        // 3. Pintar el suelo (se mantiene igual)
-        const colores = ['#FF5722', '#2196F3', '#4CAF50', '#9C27B0'];
-        for (let i = 0; i < 4; i++) {
-            let seg = document.createElement('div');
-            seg.className = "segmento-suelo";
-            seg.style.backgroundColor = colores[i];
-            let ancho = (i < 3) ? diametro : (diametro * 0.14159);
-            seg.style.width = ancho + "px";
-            camino.appendChild(seg);
-        }
-
-        // 4. Contador de Pi sincronizado
+        // --- MEDIDOR EN TIEMPO REAL ---
         let t_inicio = performance.now();
-        function actualizar(ahora) {
-            let progreso = Math.min((ahora - t_inicio) / duracionTotal, 1);
-            let valorPi = progreso * Math.PI;
-            contador.innerText = valorPi.toFixed(2);
-            if (progreso < 1) {
-                requestAnimationFrame(actualizar);
-            } else {
-                contador.innerText = "3.14"; // Valor final exacto
-            }
+        function actualizarMedidores(ahora) {
+            let progreso = Math.min((ahora - t_inicio) / duracion, 1);
+
+            // Medidor de milímetros (0 a 2199.11 mm)
+            let mmActuales = progreso * perimetroRealMm;
+            distText.innerText = mmActuales.toFixed(0);
+
+            // Medidor de Pi (0 a 3.14)
+            let piActual = progreso * Math.PI;
+            contadorPi.innerText = piActual.toFixed(2);
+
+            if (progreso < 1) requestAnimationFrame(actualizarMedidores);
         }
-        requestAnimationFrame(actualizar);
+        requestAnimationFrame(actualizarMedidores);
 
     }, 50);
 }
