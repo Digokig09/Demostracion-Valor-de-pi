@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Demostración de Pi - Llanta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="glass-card">
+        <h1>El Secreto de &pi;</h1>
+        <p class="subtitle">Desenrollando el diámetro de una llanta Mavic</p>
+
+        <div class="resumen-barras">
+            <div id="ref-1" class="barra-ref" style="background:#FF5722">D1</div>
+            <div id="ref-2" class="barra-ref" style="background:#2196F3">D2</div>
+            <div id="ref-3" class="barra-ref" style="background:#4CAF50">D3</div>
+            <div id="ref-4" class="barra-ref" style="background:#9C27B0">.14</div>
+        </div>
+
+        <div class="escena">
+            <div id="camino-pintado" class="camino-pintado"></div>
+            <div class="suelo-linea"></div>
+
+            <img src="llanta.png" id="llanta" class="llanta">
+            <div id="sombra" class="sombra"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span class="label">Valor de &pi;</span>
+                <span id="contador" class="value">0.00</span>
+            </div>
+        </div>
+
+        <button class="btn-primary" onclick="animar()">Iniciar Demostración</button>
+    </div>
+
+    <div class="info-tecnica">
+        <p>Diámetro de llanta Mavic: <span id="medida-diametro">700</span> mm</p>
+        <p>Distancia recorrida: <b id="distancia-recorrida">0</b> mm</p>
+    </div>
+
+    <div class="contenedor-animacion">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
