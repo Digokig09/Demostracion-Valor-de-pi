@@ -32,8 +32,8 @@ body {
 }
 
 .llanta {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     position: absolute;
     bottom: 20px;
     /* Separada del borde para la sombra */
@@ -88,12 +88,12 @@ body {
     box-shadow: 0 10px 15px rgba(99, 102, 241, 0.4);
 }
 
-/* Añade esto a tu CSS */
+
 .camino-pintado {
     position: absolute;
     bottom: 20px;
     /* Misma altura que la línea del suelo */
-    left: 60px;
+    left: 75px;
     /* Mitad de la llanta para que empiece en el punto de contacto */
     height: 8px;
     display: flex;
