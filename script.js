@@ -1,3 +1,4 @@
+// script.js
 function animar() {
     const llanta = document.getElementById('llanta');
     const camino = document.getElementById('camino-pintado');
@@ -9,11 +10,12 @@ function animar() {
         document.getElementById('ref-4')
     ];
 
-    const diametro = 120;
+    // --- CONFIGURACIÓN DE TAMAÑO ---
+    const diametro = 150; // El nuevo tamaño en píxeles (CSS)
     const perimetro = diametro * Math.PI;
     const duracionTotal = 4000; // 4 segundos para todo el recorrido
 
-    // --- REINICIO ---
+    // --- REINICIO INSTANTÁNEO ---
     llanta.style.transition = "none";
     camino.style.transition = "none";
     llanta.style.left = "0px";
@@ -27,24 +29,27 @@ function animar() {
         r.style.width = "0px";
     });
 
+    // --- PASO 2: INICIAR ANIMACIÓN SINCRONIZADA ---
     setTimeout(() => {
-        // 1. Animación base (Llanta y rastro en el suelo)
+        // 1. Animamos la base (Llanta y rastro)
         llanta.style.transition = `all ${duracionTotal}ms linear`;
         camino.style.transition = `width ${duracionTotal}ms linear`;
 
+        // Mover la llanta y crecer el rastro
         llanta.style.left = perimetro + "px";
-        llanta.style.transform = "rotate(360deg)";
         camino.style.width = perimetro + "px";
 
-        // 2. Lógica de Relevos para las barras de arriba
-        // El tiempo que tarda cada "diámetro" en recorrerse
+        // --- CÁLCULO DE ROTACIÓN SINCRONIZADA ---
+        // Para que sea perfecto, la llanta debe rotar exactamente
+        // 360 grados por cada vuelta completa (perímetro).
+        // En este caso, dará 1 vuelta completa para llegar a PI.
+        const rotacionTotalGrados = 360;
+        llanta.style.transform = `rotate(${rotacionTotalGrados}deg)`;
+
+        // 2. Animación de Relevos de las barras superiores (proporcionales)
         const tiempoPorDiametro = duracionTotal / Math.PI;
-
         refs.forEach((ref, i) => {
-            // Calculamos el retraso: la barra 2 espera a la 1, etc.
             const retraso = i * tiempoPorDiametro;
-
-            // Calculamos la duración de cada barra (las 3 primeras iguales, la última más corta)
             const proporcionAncho = (i < 3) ? 1 : 0.14159;
             const duracionBarra = tiempoPorDiametro * proporcionAncho;
 
@@ -55,7 +60,7 @@ function animar() {
             ref.style.width = anchoFinal + "px";
         });
 
-        // 3. Pintar el suelo (se mantiene igual, el contenedor 'camino' revela los colores)
+        // 3. Pintar el suelo (se mantiene igual)
         const colores = ['#FF5722', '#2196F3', '#4CAF50', '#9C27B0'];
         for (let i = 0; i < 4; i++) {
             let seg = document.createElement('div');
@@ -66,14 +71,17 @@ function animar() {
             camino.appendChild(seg);
         }
 
-        // 4. Contador fluido
+        // 4. Contador de Pi sincronizado
         let t_inicio = performance.now();
         function actualizar(ahora) {
             let progreso = Math.min((ahora - t_inicio) / duracionTotal, 1);
             let valorPi = progreso * Math.PI;
             contador.innerText = valorPi.toFixed(2);
-            if (progreso < 1) requestAnimationFrame(actualizar);
-            else contador.innerText = "3.14";
+            if (progreso < 1) {
+                requestAnimationFrame(actualizar);
+            } else {
+                contador.innerText = "3.14"; // Valor final exacto
+            }
         }
         requestAnimationFrame(actualizar);
 
