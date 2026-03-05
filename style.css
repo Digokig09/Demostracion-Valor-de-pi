@@ -36,9 +36,20 @@ body {
     height: 150px;
     position: absolute;
     bottom: 20px;
-    /* Separada del borde para la sombra */
     left: 0;
-    z-index: 5;
+}
+
+.info-tecnica {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+#distancia-recorrida {
+    color: #4CAF50;
+    font-size: 1.2em;
 }
 
 .sombra {
